@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %} Register {% endblock %}
+
+{% block content %}
+
+    <form action='/cat/register/' method = 'post'> {%csrf_token %}
+    
+    {{ form }}
+    
+    <input type = 'submit' value = 'Register'>
+    
+    </form>
+    
+{% endblock %}
