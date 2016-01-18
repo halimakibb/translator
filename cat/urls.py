@@ -21,5 +21,12 @@ from . import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^index/', views.index),
-    url(r'^register/', views.register)
+    #url(r'^register/', views.register),
+    url(r'^manage/unassigned', views.unassigned),
+    url(r'^manage/assign/(?P<article_id>\d+)', views.assign_translator),
+    url(r'^manage/assigned/(?P<article_id>\d+)/(?P<translator_id>\d+)', views.assigned),
+    url(r'^wordcount/', views.wordcount),
+    url(r'^create/', views.create_article),
+    url(r'^untranslated', views.untranslated),
+    url(r'^translate/(?P<article_id>\d+)', views.translate),
 ]

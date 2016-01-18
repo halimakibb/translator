@@ -21,4 +21,5 @@ from cat import urls as cat_urls
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^cat/', include(cat_urls)),
+    url(r'^tinymce/', include('tinymce.urls'))
 ]

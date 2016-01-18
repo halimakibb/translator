@@ -11,7 +11,6 @@ class UserManager(BaseUserManager):
         user = self.model(
                           name = name,
                           email = self.normalize_email(email),
-                          is_manager = False,
                           is_active = True,
                           **kwargs
         )
@@ -23,7 +22,6 @@ class UserManager(BaseUserManager):
         user = self.model(
                           name = name,
                           email = self.normalize_email(email),
-                          is_manager = True,
                           is_superuser = True,
                           is_staff = True,
                           is_active = True,
@@ -34,11 +32,16 @@ class UserManager(BaseUserManager):
         return user     
 
 class User(AbstractBaseUser, PermissionsMixin):
+    JOB_CHOICES = (("CL", "Client"),
+                   ("MG", "Manager"),
+                    ("TR", "Translator"),)
     USERNAME_FIELD = 'name'
     REQUIRED_FIELDS = ['email']
     email = models.EmailField(default = 'xx@xx.com', unique = True)
     name = models.CharField(max_length = 20, unique = True)
-    is_manager = models.BooleanField(default = False)
+    job = models.CharField(max_length = 2,
+                           choices = JOB_CHOICES,
+                           default = "TR")
     is_active = models.BooleanField(default = False)
     is_staff = models.BooleanField(default = False)
     
@@ -49,22 +52,45 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     objects = UserManager()
     
+class OriginalManager(models.Manager):
+    def create_article(self, title, body, word_count, price):
+        article = self.create(title = title, body = body, word_count=word_count, price=price)
+
+        return article
+    
 class OriginalArticle(models.Model):
     title = models.TextField()
     body = models.TextField()
     published = models.DateField(default = date.today, editable = False)
     updated = models.DateField(default = date.today, editable = False)
-    manager = models.ForeignKey(User, editable = False)
+    manager = models.ForeignKey(User, blank = True, null = True, default = None)
+    word_count = models.IntegerField(default = 0)
+    price = models.IntegerField(default = 0)
+    is_assigned = models.BooleanField(default = False)
     is_translated = models.BooleanField(default = False)
+    
+    objects = OriginalManager()
     
     def __unicode__(self):
         return self.title
-
+    
+class TranslatedManager(models.Manager):
+    def create_article(self, origin, translator):
+        article = self.create(origin = origin, translator = translator)
+        article.save()
+        return article
+    
 class TranslatedArticle(models.Model):
-    origin = models.ForeignKey(OriginalArticle)
-    title = models.TextField()
-    body = models.TextField()
+    origin = models.ForeignKey(OriginalArticle, editable = False)
+    title = models.TextField(default = '')
+    body = models.TextField(default = '')
     published = models.DateField(default = date.today, editable = False)
     updated = models.DateField(default = date.today, editable = False)
-    translator = models.ForeignKey(User, editable = False)
-    is_finished = models.BooleanField(default = False)
+    translator = models.ForeignKey(User)
+    is_translated = models.BooleanField(default = False)
+    is_checked = models.BooleanField(default = False)
+    
+    objects = TranslatedManager()
+    
+    def __unicode__(self):
+        return self.origin.title

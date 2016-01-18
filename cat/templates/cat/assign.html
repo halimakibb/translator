@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} Assign Translator {% endblock %}
+
+{% block header %}
+        <header id="header">
+                <h1><a href="index.html">Translator</a></h1>
+                <nav id="nav">
+                        <ul>
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="#">Generic</a></li>
+                                <li><a href="#">Elements</a></li>
+                                <li><a href="#" class="button special">Sign Up</a></li>
+                        </ul>
+                </nav>
+        </header>
+                        
+{% endblock %}
+
+{% block content %}
+<section id="main" class="wrapper">
+<div class="container">
+
+    <h2> Choose a translator to assign the article "{{article.title}}" </h2>
+
+{% if translators %}
+    
+    {% for translator in translators %}
+    
+        <ul>
+        <li><a href = "/cat/manage/assigned/{{article.id}}/{{translator.id}}">{{translator.name}}</a></li> 
+        </ul>
+        
+    {% endfor %}
+    
+</div>
+</section>
+
+{% else %}
+    
+    <header class="major">
+            <h2>No translator is available</h2>
+    </header>>
+        
+</div>
+</section>
+{% endif %}
+
+{% endblock %}
