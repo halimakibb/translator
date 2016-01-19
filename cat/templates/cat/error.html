@@ -4,14 +4,14 @@
 
 {% block javascript %}
         <script type="text/javascript" src="{% static 'cat/js/tinymce/tinymce.min.js' %}"></script>
-        <script>tinymce.init({ selector:'textarea' })</script>
-        
+        <script>tinymce.init({ selector:'textarea', plugins: "wordcount" })</script>
+
 {% endblock %}
 
 {% block header %}
 
         <header id="header">
-                <h1><a href="/cat/index">Home</a></h1>
+                <h1><a href="index.html">Create Article</a></h1>
                 <nav id="nav">
                         <ul>
                                 <li><a href="/cat/index">Home</a></li>
@@ -27,13 +27,9 @@
 <section id="main" class="wrapper">
 <div class="container">
 
-{% autoescape off %}
-<p> Your article <strong>{{ title }}</strong> is going to be submitted. Word count is {{ totalwords }}, price is {{ totalprice}}. The document will be translated from {{ original.name }} to {{ target.name }} </p>
-<p> Continue? </p>
-{% endautoescape %}
+<h2> Target language cannot be the same as source language </h2>
 
-<a href="/cat/confirm_yes" class="button big">Submit</a>
-<a href="/cat/confirm_no" class="button big">Cancel</a>
+
 </section>
 </div>
 

@@ -15,9 +15,7 @@
                 <nav id="nav">
                         <ul>
                                 <li><a href="/cat/index">Home</a></li>
-                                <li><a href="#">Generic</a></li>
-                                <li><a href="#">Elements</a></li>
-                                <li><a href="#" class="button special">Sign Up</a></li>
+                                <li><a href="/cat/logout" class="button special">Logout</a></li>
                         </ul>
                 </nav>
         </header>
@@ -32,6 +30,31 @@
 <form action='/cat/create' method = 'post'> {% csrf_token %}
 <ul>
 {{ form.as_ul }}
+
+<li> Select Original Language </li><br>
+<div class="select-wrapper">
+
+<select id="id_original_language" name="original_language">
+<option value="1">English</option>
+<option value="2">French</option>
+<option value="3">Indonesian</option>
+<option value="4">Spanish</option>
+</select>
+</div>
+<br>
+
+<li> Select Target Language </li><br>
+
+<div class="select-wrapper">
+<select id="id_target_language" name="target_language">
+<option value="1">English</option>
+<option value="2">French</option>
+<option value="3">Indonesian</option>
+<option value="4">Spanish</option>
+</select>
+
+</div>
+
 </ul>
 
 <input type = 'submit' name = 'submit' value = 'Create Article'>

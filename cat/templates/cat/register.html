@@ -9,9 +9,9 @@
                 <nav id="nav">
                         <ul>
                                 <li><a href="/cat/index">Home</a></li>
-                                <li><a href="#">Generic</a></li>
-                                <li><a href="#">Elements</a></li>
-                                <li><a href="#" class="button special">Sign Up</a></li>
+                                <li><a href="/cat/register/client" class ="button special">Sign Up (Client)</a><li>
+                                <li><a href="/cat/register/translator" class="button special">Sign Up (Translator)</a><li>
+                                <li><a href="/cat/login" class="button special">Login</a></li>
                         </ul>
                 </nav>
         </header>
@@ -26,9 +26,43 @@
 <div class="container">
 
     <form action='/cat/register/{{ jobcode }}' method = 'post'> {% csrf_token %}
+
+        {% if jobcode == 'translator' %}    
     
-    {{ form.as_ul }}
-    
+                {{ form.as_ul }}
+                
+                <br>
+                <li> <label for="id_original_language_0">Original Language</label> </li>
+                
+                <input id="id_original_language_0" name="original_language_0" type="checkbox" value="1">
+                <label for="id_original_language_0">EN</label>
+                <input id="id_original_language_1" name="original_language_1" type="checkbox" value="2">
+                <label for="id_original_language_1">FR</label>
+                <input id="id_original_language_2" name="original_language_2" type="checkbox" value="3">
+                <label for="id_original_language_2">ID</label>
+                <input id="id_original_language_3" name="original_language_3" type="checkbox" value="4">
+                <label for="id_original_language_3">ES</label>
+                
+                <li><label for="id_target_language_0">Target language:</label></li>
+                
+                <input id="id_target_language_0" name="target_language_0" type="checkbox" value="1">
+                <label for="id_target_language_0">EN</label>
+                <input id="id_target_language_1" name="target_language_1" type="checkbox" value="2">
+                <label for="id_target_language_1">FR</label>
+                <input id="id_target_language_2" name="target_language_2" type="checkbox" value="3">
+                <label for="id_target_language_2">ID</label>
+                <input id="id_target_language_3" name="target_language_3" type="checkbox" value="4">
+                <label for="id_target_language_3">ES</label>
+                
+                <br>
+        
+        {% else %}
+        
+                {{form.as_ul}}
+                
+                <br>
+
+        {% endif %}    
     <input type = 'submit' value = 'Register'>
     
     </form>

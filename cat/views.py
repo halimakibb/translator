@@ -1,5 +1,5 @@
 from django.shortcuts import render, render_to_response
-from .models import User, OriginalArticle, TranslatedArticle, TranslatedManager
+from .models import User, OriginalArticle, TranslatedArticle, TranslatedManager, Language
 from django.contrib import auth
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.context_processors import csrf
@@ -62,11 +62,35 @@ def register(request, jobcode):
             elif jobcode == "translator":
                 user.job == "TR"
                 user.save()
+                
+                language0 = request.POST.get("original_language_0", "")
+                language1 = request.POST.get("original_language_1", "")
+                language2 = request.POST.get("original_language_2", "")
+                language3 = request.POST.get("original_language_3", "")
+                
+                languages = [language0, language1, language2, language3]
+                
+                target0 = request.POST.get("target_language_0", '')
+                target1 = request.POST.get("target_language_1", '')
+                target2 = request.POST.get("target_language_2", '')
+                target3 = request.POST.get("target_language_3", '')
+                
+                targets = [target0, target1, target2, target3]
+                
+                for language in languages:
+                    if language is not '':
+                        user.original_language.add(Language.objects.get(id = language))
+                        user.save()
+                for target in targets:
+                    if target is not '':
+                        user.target_language.add(Language.objects.get(id = target))
+                        user.save()
+                
             else:
                 return HttpResponse(jobcode)
             return render(request, 'cat/register_success.html')
         else:
-            return render(request, 'cat/invalid.html')
+            return render(request, 'cat/invalid.html', { 'form': form })
     else:
         args = {}
         args.update(csrf(request))
@@ -86,8 +110,10 @@ def unassigned(request):
 
 def assign_translator(request, article_id):
     article = OriginalArticle.objects.get(id = article_id)
+    original = article.original_language.all()
+    target = article.target_language.all()
     if article.is_assigned == False:
-        translators = User.objects.filter(job = "TR")
+        translators = User.objects.filter(job = "TR").filter(original_language__in=original).filter(target_language__in=target)
         return render_to_response('cat/assign.html',
                                   {'translators': translators,
                                    'article': article})
@@ -100,12 +126,22 @@ def assigned(request, article_id, translator_id):
     original = OriginalArticle.objects.get(id = article_id)
     original.is_assigned = True
     original.save()
+    origin = list(original.original_language.all())
+    target = list(original.target_language.all())
+
     translator = User.objects.get(id = translator_id)
     article = TranslatedArticle.objects.create_article(original, translator)
+    for i in origin:
+        article.original_language.add(i)
+    for i in target:
+        article.target_language.add(i)
+    article.save()
         
     return render_to_response('cat/assigned.html',
                               {'article': original,
-                               'translator': translator})
+                               'translator': translator,
+                               'origin': origin,
+                               'target': target})
 
 def create_article(request):
     RATE = 0.05
@@ -114,20 +150,30 @@ def create_article(request):
         form = ArticleForm(request.POST, request.FILES)
         
         if form.is_valid():
-            article = form.save(commit = False)
-            words1 = article.title
-            words2 = article.body
-            totalwords = wordcount(words1) + wordcount(words2)
-            totalprice = totalwords * RATE
-            request.session['title'] = words1
-            request.session['body'] = words2
-            request.session['totalwords'] = totalwords
-            request.session['totalprice'] = totalprice
-            #return render_to_response('cat/success.html',
-                                      #{'title': article.title,
-                                       #'totalwords': totalwords,
-                                       #'totalprice': totalprice})
-            return HttpResponseRedirect('/cat/confirm_article')
+            original = request.POST.get("original_language", "")
+            target = request.POST.get("target_language", "")
+            if original == target:
+                return render(request, 'cat/error.html')
+            else:
+                article = form.save(commit = False)
+                words1 = article.title
+                words2 = article.body
+                totalwords = wordcount(words1) + wordcount(words2)
+                totalprice = totalwords * RATE
+    
+    
+                request.session['author'] = request.user.id
+                request.session['title'] = words1
+                request.session['body'] = words2
+                request.session['totalwords'] = totalwords
+                request.session['totalprice'] = totalprice
+                request.session['original'] = original
+                request.session['target'] = target
+                #return render_to_response('cat/success.html',
+                                          #{'title': article.title,
+                                           #'totalwords': totalwords,
+                                           #'totalprice': totalprice})
+                return HttpResponseRedirect('/cat/confirm_article')
         else:
             return render_to_response('cat/invalid.html')
     else:
@@ -145,26 +191,45 @@ def confirm_article(request):
     body = request.session['body']
     totalwords = request.session['totalwords']
     totalprice = request.session['totalprice']
+    original = request.session['original']
+    original = Language.objects.get(id = original)
+    target = request.session['target']
+    target = Language.objects.get(id = target)
 
     
     return render_to_response('cat/confirm.html',
                               {'title': title,
                                'totalwords': totalwords,
-                               'totalprice': totalprice})
+                               'totalprice': totalprice,
+                               'original': original,
+                               'target': target,
+                               'original': original})
 
 def confirm_yes(request):
     title = request.session['title']
     body = request.session['body']
     totalwords = request.session['totalwords']
     totalprice = request.session['totalprice']
+    user_id = request.session['author']
+    author = User.objects.get(id = user_id)
+    original = request.session['original']
+    original = Language.objects.get(id = original)
+    target = request.session['target']
+    target = Language.objects.get(id = target)  
     
     article = OriginalArticle.objects.create_article(title, body, totalwords, 
-                                                    totalprice)
+                                                    totalprice, author)
+    article.original_language.add(original)
+    article.target_language.add(target)
+    article.save()
     
     del request.session['title']
     del request.session['body']
     del request.session['totalwords']
     del request.session['totalprice']
+    del request.session['author']
+    del request.session['original']
+    del request.session['target']
     
     return render_to_response('cat/confirm_yes.html',
                               {'title': title,
@@ -176,6 +241,8 @@ def confirm_no(request):
     del request.session['body']
     del request.session['totalwords']
     del request.session['totalprice']
+    del request.session['original']
+    del request.session['target']
     
     return render_to_response('cat/confirm_no.html')
 

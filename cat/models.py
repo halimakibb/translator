@@ -6,6 +6,13 @@ from django.db import models
 from time import time
 # Create your models here.
 
+class Language(models.Model):
+    name = models.TextField(default = '')
+    code = models.CharField(max_length = 2)
+    
+    def __unicode__(self):
+        return self.code
+
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password, **kwargs):
         user = self.model(
@@ -42,6 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     job = models.CharField(max_length = 2,
                            choices = JOB_CHOICES,
                            default = "TR")
+    original_language = models.ManyToManyField(Language, blank = True, default = None, related_name="user_original_language")
+    target_language = models.ManyToManyField(Language, blank = True, default = None, related_name="user_target_language")    
     is_active = models.BooleanField(default = True)
     is_staff = models.BooleanField(default = False)
     
@@ -51,10 +60,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.name
     
     objects = UserManager()
-    
+
+
+   
 class OriginalManager(models.Manager):
-    def create_article(self, title, body, word_count, price):
-        article = self.create(title = title, body = body, word_count=word_count, price=price)
+    def create_article(self, title, body, word_count, price, author):
+        article = self.create(title = title, body = body, word_count=word_count, price=price, author=author)
 
         return article
     
@@ -63,9 +74,12 @@ class OriginalArticle(models.Model):
     body = models.TextField()
     published = models.DateField(default = date.today, editable = False)
     updated = models.DateField(default = date.today, editable = False)
-    manager = models.ForeignKey(User, blank = True, null = True, default = None)
+    manager = models.ForeignKey(User, blank = True, null = True, default = None, related_name="manager")
+    author = models.ForeignKey(User, blank = True, null = True, default = None, related_name="author")
     word_count = models.IntegerField(default = 0)
-    price = models.IntegerField(default = 0)
+    price = models.FloatField(default = 0)
+    original_language = models.ManyToManyField(Language, blank = True, default = None, related_name="origin_original_language")
+    target_language = models.ManyToManyField(Language, blank = True, default = None, related_name="origin_target_language")
     is_assigned = models.BooleanField(default = False)
     is_translated = models.BooleanField(default = False)
     
@@ -86,6 +100,8 @@ class TranslatedArticle(models.Model):
     published = models.DateField(default = date.today, editable = False)
     updated = models.DateField(default = date.today, editable = False)
     translator = models.ForeignKey(User)
+    original_language = models.ManyToManyField(Language, blank = True, default = None, related_name="translate_original_language")
+    target_language = models.ManyToManyField(Language, blank = True, default = None, related_name="translate_target_language")    
     is_translated = models.BooleanField(default = False)
     is_checked = models.BooleanField(default = False)
     
@@ -93,3 +109,4 @@ class TranslatedArticle(models.Model):
     
     def __unicode__(self):
         return self.origin.title
+    

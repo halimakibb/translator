@@ -1,10 +1,11 @@
 from django import forms
-from django.forms import Textarea
+from django.forms import Textarea, CheckboxSelectMultiple, Select
 from django.contrib.auth.forms import UserCreationForm
 #from tinymce.widgets import TinyMCE
 from models import User, OriginalArticle, TranslatedArticle
 
 class MyRegistrationForm(UserCreationForm):
+    
     class Meta:
         model = User
         fields = ('email', 'name')
