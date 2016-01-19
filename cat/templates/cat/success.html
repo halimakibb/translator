@@ -11,10 +11,10 @@
 {% block header %}
 
         <header id="header">
-                <h1><a href="index.html">Create Article</a></h1>
+                <h1><a href="/cat/index">Home</a></h1>
                 <nav id="nav">
                         <ul>
-                                <li><a href="index.html">Home</a></li>
+                                <li><a href="/cat/index">Home</a></li>
                                 <li><a href="#">Generic</a></li>
                                 <li><a href="#">Elements</a></li>
                                 <li><a href="#" class="button special">Sign Up</a></li>
@@ -28,8 +28,10 @@
 
 <section id="main" class="wrapper">
 <div class="container">
-<p> Your article {{title}} has been submitted. Word count is {{ totalwords }}, price is {{ totalprice}} </p>
 
+{% autoescape on %}
+<p> Your article {{title}} has been submitted. Word count is {{ totalwords }}, price is {{ totalprice}} </p>
+{% endautoescape %}
 <a href = "/cat/create">Back</a>
 </section>
 </div>

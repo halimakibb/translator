@@ -6,10 +6,10 @@
 
 {% block header %}
         <header id="header">
-                <h1><a href="index.html">Translator</a></h1>
+                <h1><a href="/cat/index">Translator</a></h1>
                 <nav id="nav">
                         <ul>
-                                <li><a href="index.html">Home</a></li>
+                                <li><a href="/cat/index">Home</a></li>
                                 <li><a href="#">Generic</a></li>
                                 <li><a href="#">Elements</a></li>
                                 <li><a href="#" class="button special">Sign Up</a></li>
@@ -22,9 +22,9 @@
 {% block content %}
 <section id="main" class="wrapper">
 <div class="container">
-
-    <h2> Choose a translator to assign the article "{{article.title}}" </h2>
-
+        {% autoescape off %}
+    <p> Choose a translator to assign the article <strong> {{article.title}} </strong> </p>
+        {% endautoescape %}
 {% if translators %}
     
     {% for translator in translators %}
@@ -34,6 +34,7 @@
         </ul>
         
     {% endfor %}
+    
     
 </div>
 </section>

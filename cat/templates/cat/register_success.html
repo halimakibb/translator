@@ -1,12 +1,9 @@
-{% extends "base.html" %}
-
-{% load staticfiles %}
-
-{% block title %} Assign Translator {% endblock %}
+{% extends 'base.html' %}
 
 {% block header %}
+
         <header id="header">
-                <h1><a href="/cat/index">Translator</a></h1>
+                <h1><a href="index.html">Registration Success!</a></h1>
                 <nav id="nav">
                         <ul>
                                 <li><a href="/cat/index">Home</a></li>
@@ -20,13 +17,16 @@
 {% endblock %}
 
 {% block content %}
+
 <section id="main" class="wrapper">
 <div class="container">
+<h2> You have been successfully registered! </h2>
 
-        {% autoescape off %}
-    <p> Article <strong>{{article.title}}</strong> has been assigned to {{translator.name}} <p>
-    <a href = "/cat/manage/unassigned"> Back to Untranslated Pages </a>
-        {% endautoescape %}
+<a href = "/cat/login" class = "button">Login</a> 
+<br><br>
+<a href = "/cat/index" class = "button">Back</a>
+
 </section>
 </div>
+
 {% endblock %}

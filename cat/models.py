@@ -42,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     job = models.CharField(max_length = 2,
                            choices = JOB_CHOICES,
                            default = "TR")
-    is_active = models.BooleanField(default = False)
+    is_active = models.BooleanField(default = True)
     is_staff = models.BooleanField(default = False)
     
     def get_full_name(self):
@@ -77,7 +77,6 @@ class OriginalArticle(models.Model):
 class TranslatedManager(models.Manager):
     def create_article(self, origin, translator):
         article = self.create(origin = origin, translator = translator)
-        article.save()
         return article
     
 class TranslatedArticle(models.Model):

@@ -31,6 +31,9 @@
 <form action='/cat/translate/{{original.id}}' method = 'post'> {% csrf_token %}
 <table>
         <tr>
+                <th>Original Text</th>
+                <th>Translated Text</th>
+        <tr>
                 <td><textarea rows="2">{{original.title}}</textarea></td>
                 <td>{{ title }}</td>
         </tr>

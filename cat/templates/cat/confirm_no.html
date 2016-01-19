@@ -1,12 +1,17 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% load staticfiles %}
 
-{% block title %} Assign Translator {% endblock %}
+{% block javascript %}
+        <script type="text/javascript" src="{% static 'cat/js/tinymce/tinymce.min.js' %}"></script>
+        <script>tinymce.init({ selector:'textarea' })</script>
+        
+{% endblock %}
 
 {% block header %}
+
         <header id="header">
-                <h1><a href="/cat/index">Translator</a></h1>
+                <h1><a href="/cat/index">Home</a></h1>
                 <nav id="nav">
                         <ul>
                                 <li><a href="/cat/index">Home</a></li>
@@ -20,13 +25,13 @@
 {% endblock %}
 
 {% block content %}
+
 <section id="main" class="wrapper">
 <div class="container">
+<p> You cancelled your article submission</p>
 
-        {% autoescape off %}
-    <p> Article <strong>{{article.title}}</strong> has been assigned to {{translator.name}} <p>
-    <a href = "/cat/manage/unassigned"> Back to Untranslated Pages </a>
-        {% endautoescape %}
+<a href="/cat/create" class="button big">Back to Creation Page</a>
 </section>
 </div>
+
 {% endblock %}

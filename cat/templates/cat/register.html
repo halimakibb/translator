@@ -2,14 +2,39 @@
 
 {% block title %} Register {% endblock %}
 
+{% block header %}
+
+        <header id="header">
+                <h1><a href="index.html">Registration Page</a></h1>
+                <nav id="nav">
+                        <ul>
+                                <li><a href="/cat/index">Home</a></li>
+                                <li><a href="#">Generic</a></li>
+                                <li><a href="#">Elements</a></li>
+                                <li><a href="#" class="button special">Sign Up</a></li>
+                        </ul>
+                </nav>
+        </header>
+                        
+{% endblock %}
+
+
+
 {% block content %}
 
-    <form action='/cat/register/' method = 'post'> {%csrf_token %}
+<section id="main" class="wrapper">
+<div class="container">
+
+    <form action='/cat/register/{{ jobcode }}' method = 'post'> {% csrf_token %}
     
-    {{ form }}
+    {{ form.as_ul }}
     
     <input type = 'submit' value = 'Register'>
     
     </form>
+
+</section>
+</div>
+
     
 {% endblock %}

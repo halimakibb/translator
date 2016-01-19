@@ -19,14 +19,23 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^index/', views.index),
-    #url(r'^register/', views.register),
+    url(r'^admin', admin.site.urls),
+    url(r'^index', views.index),
+    url(r'^register/(?P<jobcode>[a-z]+)', views.register),
     url(r'^manage/unassigned', views.unassigned),
     url(r'^manage/assign/(?P<article_id>\d+)', views.assign_translator),
     url(r'^manage/assigned/(?P<article_id>\d+)/(?P<translator_id>\d+)', views.assigned),
-    url(r'^wordcount/', views.wordcount),
-    url(r'^create/', views.create_article),
+    url(r'^wordcount', views.wordcount),
+    url(r'^create', views.create_article),
+    url(r'^confirm_article', views.confirm_article),
+    url(r'^confirm_yes', views.confirm_yes),
+    url(r'^confirm_no', views.confirm_no),
     url(r'^untranslated', views.untranslated),
     url(r'^translate/(?P<article_id>\d+)', views.translate),
+    url(r'^auth', views.auth_view),
+    url(r'^login', views.login),
+    url(r'^logout', views.logout),
+    url(r'^loggedin', views.loggedin),
+    url(r'^translator_dashboard', views.translator_dashboard),
+    url(r'^client_dashboard', views.client_dashboard)
 ]

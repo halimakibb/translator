@@ -9,7 +9,7 @@
                 <h1><a href="index.html">Translator</a></h1>
                 <nav id="nav">
                         <ul>
-                                <li><a href="index.html">Home</a></li>
+                                <li><a href="/cat/index">Home</a></li>
                                 <li><a href="#">Generic</a></li>
                                 <li><a href="#">Elements</a></li>
                                 <li><a href="#" class="button special">Sign Up</a></li>
@@ -26,14 +26,18 @@
     <h2> Articles to be translated </h2>
 
 {% if article_list %}
+        
+        {% autoescape off %}
     
     {% for article in article_list %}
     
         <ul>
-        <li><a href = "/cat/translate/{{article.id}}">{{article.title}}</a></li> 
+        <p><li><a href = "/cat/translate/{{article.id}}">{{article.origin.title}}</a></li></p>
         </ul>
         
     {% endfor %}
+        
+        {% endautoescape %}
     
 </div>
 </section>
@@ -42,7 +46,7 @@
     
     <header class="major">
             <h2>No article to translate</h2>
-    </header>>
+    </header>
         
 </div>
 </section>

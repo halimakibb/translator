@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 
-{% load staticfiles %}
+{% block title %} Login {% endblock %}
 
-{% block title %} Assign Translator {% endblock %}
+{% block javascript %} 
+
+<SCRIPT LANGUAGE="JavaScript">
+document.location.href="/cat/index"
+</SCRIPT>
+
+{% endblock %}
 
 {% block header %}
         <header id="header">
@@ -20,13 +26,12 @@
 {% endblock %}
 
 {% block content %}
+
 <section id="main" class="wrapper">
 <div class="container">
 
-        {% autoescape off %}
-    <p> Article <strong>{{article.title}}</strong> has been assigned to {{translator.name}} <p>
-    <a href = "/cat/manage/unassigned"> Back to Untranslated Pages </a>
-        {% endautoescape %}
-</section>
+    <h2> You have been logged out </h2>
+    
 </div>
+</section>
 {% endblock %}
